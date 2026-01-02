@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { assets } from "@/assets/assets"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -33,8 +33,26 @@ const projects = [
 
 const WorkSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [itemsPerView, setItemsPerView] = useState(3)
 
-  const itemsPerView = 3
+  // 🔥 Responsive items per view
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1) // mobile
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2) // tablet
+      } else {
+        setItemsPerView(3) // desktop
+      }
+    }
+
+    updateItemsPerView()
+    window.addEventListener("resize", updateItemsPerView)
+
+    return () => window.removeEventListener("resize", updateItemsPerView)
+  }, [])
+
   const maxIndex = Math.max(projects.length - itemsPerView, 0)
 
   const handlePrev = () => {
@@ -59,7 +77,6 @@ const WorkSection = () => {
         I build digital products that are fast, responsive, and meaningful.
       </p>
 
-      {/* Carousel Container */}
       <div className="relative max-w-6xl mx-auto">
         {/* Left Arrow */}
         <button
@@ -77,7 +94,7 @@ const WorkSection = () => {
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{
-              transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+              transform: `translateX(-${(100 / itemsPerView) * currentIndex}%)`,
             }}
           >
             {projects.map((project, idx) => (
@@ -92,7 +109,6 @@ const WorkSection = () => {
                   className="block bg-lightHover dark:bg-gray-900 rounded-xl p-4
                              hover:shadow-lg transition transform hover:-translate-y-2"
                 >
-                  {/* Image */}
                   <div className="relative h-40 mb-4 rounded-lg overflow-hidden">
                     <Image
                       src={project.image}
