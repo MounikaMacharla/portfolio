@@ -1,64 +1,129 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import { assets } from "@/assets/assets"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const projects = [
+  {
+    name: "WickyCandles Website",
+    link: "https://wickycandles.com",
+    description: "A complete ecommerce website for custom candle selling.",
+    image: assets.wickycandles,
+  },
   {
     name: "Ecommerce Website",
     link: "https://ishop-frontend-five.vercel.app/",
     description: "Fully functional MERN Stack Ecommerce clothing website.",
-    image:  assets.ecommerce 
+    image: assets.ecommerce,
   },
   {
     name: "Spicy Flames Website",
     link: "https://nimomach.github.io/spicy-flames/",
-    description: "A react frontend project of a resturant app.",
-    image:  assets.spicyflames 
+    description: "A React frontend restaurant application.",
+    image: assets.spicyflames,
   },
   {
     name: "ToDo App",
     link: "https://nimomach.github.io/ToDo-App/",
-    description: "Track and store all your activity.",
-    image:  assets.todo 
+    description: "Track and store all your daily activities.",
+    image: assets.todo,
   },
 ]
 
 const WorkSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const itemsPerView = 3
+  const maxIndex = Math.max(projects.length - itemsPerView, 0)
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0))
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex))
+  }
+
   return (
     <section
       id="work"
-      className="ml-0 md:ml-60 min-h-screen bg-white dark:bg-darkTheme text-gray-900 dark:text-white p-6 font-Outfit transition-colors duration-500"
+      className="ml-0 md:ml-60 min-h-screen bg-white dark:bg-darkTheme
+                 text-gray-900 dark:text-white p-6 font-Outfit transition-colors duration-500"
     >
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-Prata">
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 font-Prata">
         My Work
       </h2>
-      <h4 className="font-Outfit text-center mb-6">I build digital products that are fast, responsive, and meaningful.</h4>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {projects.map((project, idx) => (
-          <a
-            key={idx}
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-lightHover dark:bg-gray-900 rounded-xl p-4 shadow-none
-                       hover:shadow-black dark:hover:shadow-white
-                       transform transition duration-300 ease-in-out hover:-translate-y-2"
-          >
-            {/* Image */}
-            <div className="w-full h-40 relative mb-4 rounded-lg overflow-hidden">
-              <Image
-                src={project.image}
-                alt={project.name}
-                fill
-                className="object-cover"
-              />
-            </div>
 
-            <h3 className="text-xl font-semibold mb-2 font-Prata">{project.name}</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">{project.description}</p>
-          </a>
-        ))}
+      <p className="text-center mb-10 text-gray-600 dark:text-gray-300">
+        I build digital products that are fast, responsive, and meaningful.
+      </p>
+
+      {/* Carousel Container */}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Left Arrow */}
+        <button
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          className="absolute -left-6 top-1/2 -translate-y-1/2 z-10
+                     bg-white dark:bg-gray-800 p-2 rounded-full shadow
+                     disabled:opacity-40"
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        {/* Viewport */}
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+            }}
+          >
+            {projects.map((project, idx) => (
+              <div
+                key={idx}
+                className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 px-3"
+              >
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block bg-lightHover dark:bg-gray-900 rounded-xl p-4
+                             hover:shadow-lg transition transform hover:-translate-y-2"
+                >
+                  {/* Image */}
+                  <div className="relative h-40 mb-4 rounded-lg overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+
+                  <h3 className="text-xl font-semibold mb-2 font-Prata">
+                    {project.name}
+                  </h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    {project.description}
+                  </p>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Arrow */}
+        <button
+          onClick={handleNext}
+          disabled={currentIndex === maxIndex}
+          className="absolute -right-6 top-1/2 -translate-y-1/2 z-10
+                     bg-white dark:bg-gray-800 p-2 rounded-full shadow
+                     disabled:opacity-40"
+        >
+          <ChevronRight size={24} />
+        </button>
       </div>
     </section>
   )
