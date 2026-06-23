@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 const projects = [
   {
     name: "WickyCandles Website",
-    link: "https://wickycandles.com",
+    link: "https://wickycandles.vercel.app",
     description: "A complete ecommerce website for custom candle selling.",
     image: assets.wickycandles,
   },
